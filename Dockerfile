@@ -1,5 +1,7 @@
 FROM eclipse-temurin:21-jdk-alpine AS build
 WORKDIR /app
+COPY .mvn/ .mvn/
+COPY mvnw .
 COPY pom.xml .
 COPY src ./src
 RUN ./mvnw package -DskipTests
