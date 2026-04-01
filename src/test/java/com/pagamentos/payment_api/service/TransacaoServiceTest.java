@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -14,6 +16,7 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -27,6 +30,9 @@ import com.pagamentos.payment_api.dto.TransacaoResponse;
 import com.pagamentos.payment_api.model.Transacao;
 import com.pagamentos.payment_api.repository.TransacaoRepository;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+
 @ExtendWith(MockitoExtension.class)
 class TransacaoServiceTest {
 
@@ -39,9 +45,19 @@ class TransacaoServiceTest {
     @Mock
     private ObjectMapper objectMapper;
 
+    @Mock
+    private MeterRegistry meterRegistry;
+
     @InjectMocks
     private TransacaoService service;
 
+    @BeforeEach
+    void setUp() {
+        Counter counter = mock(Counter.class);
+        when(meterRegistry.counter(anyString(), any(String[].class))).thenReturn(counter);
+
+    }
+    
     @Test
     void deveCriarTransacaoComStatusPendente() {
 
