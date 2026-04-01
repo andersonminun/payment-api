@@ -5,12 +5,22 @@
     </appender>
 
     <appender name="LOGSTASH" class="net.logstash.logback.appender.LogstashTcpSocketAppender">
-        <destination>localhost:5044</destination>
+        <destination>${LOGSTASH_HOST:-localhost}:5044</destination>
         <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>
+        <connectionStrategy>
+            <roundRobin>
+                <connectionTTL>5 minutes</connectionTTL>
+            </roundRobin>
+        </connectionStrategy>
     </appender>
 
     <root level="INFO">
         <appender-ref ref="JSON_CONSOLE"/>
-        <appender-ref ref="LOGSTASH"/>
     </root>
+
+    <springProfile name="logstash">
+        <root level="INFO">
+            <appender-ref ref="LOGSTASH"/>
+        </root>
+    </springProfile>
 </configuration>

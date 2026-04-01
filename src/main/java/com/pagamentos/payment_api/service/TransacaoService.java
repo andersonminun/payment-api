@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 import org.slf4j.MDC;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,10 @@ import lombok.extern.slf4j.Slf4j;
 public class TransacaoService {
 
     private final TransacaoRepository repository;
-    private final KafkaTemplate<String, String> kafkaTemplate;
+
+    @Autowired(required = false)
+    private KafkaTemplate<String, String> kafkaTemplate;
+
     private final ObjectMapper objectMapper;
     private final MeterRegistry meterRegistry;
 
@@ -71,6 +75,11 @@ public class TransacaoService {
     }
 
     private void publicarNoKafka(Transacao transacao) {
+        
+        if (kafkaTemplate == null) {
+            log.warn("Kafka nao configurado, mensagem nao publicada. id={}", transacao.getId());
+            return;
+        }
         
         try {
             String mensagem = objectMapper.writeValueAsString(toResponse(transacao));
