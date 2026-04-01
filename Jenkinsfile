@@ -10,6 +10,7 @@ pipeline {
         REGION = 'us-central1'
         CLUSTER = 'pagamentos-cluster'
         IMAGE = "us-central1-docker.pkg.dev/${PROJECT_ID}/pagamentos/payment-api"
+        JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
     }
 
     stages {
