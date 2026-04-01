@@ -3,6 +3,7 @@ pipeline {
 
     tools {
         maven 'maven-3.9'
+        jdk 'java-21'
     }
 
     environment {
@@ -10,7 +11,7 @@ pipeline {
         REGION = 'us-central1'
         CLUSTER = 'pagamentos-cluster'
         IMAGE = "us-central1-docker.pkg.dev/${PROJECT_ID}/pagamentos/payment-api"
-        JAVA_HOME = '/usr/lib/jvm/java-21-openjdk-amd64'
+        JAVA_HOME = '/usr/lib/jvm/java-1.21.0-openjdk-amd64'
     }
 
     stages {
